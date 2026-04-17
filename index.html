@@ -1,810 +1,1138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ALLAOUI Elmehdi — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --blue: #185FA5;
-      --blue-light: #E6F1FB;
-      --blue-mid: #378ADD;
-      --text: #1a1a1a;
-      --muted: #5f5e5a;
-      --hint: #888780;
-      --border: #e5e3dc;
-      --bg: #f7f6f3;
-      --white: #ffffff;
-      --radius: 14px;
-      --nav-h: 60px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    #scroll-progress {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      width: 0%;
-      background: linear-gradient(90deg, var(--blue-mid), var(--blue));
-      z-index: 200;
-      transition: width 0.1s linear;
-      border-radius: 0 2px 2px 0;
-    }
-
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: var(--nav-h);
-      background: rgba(247,246,243,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2.5rem;
-      transition: box-shadow 0.3s;
-    }
-
-    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
-
-    .nav-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 20px;
-      letter-spacing: -0.3px;
-      color: var(--text);
-    }
-
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-
-    .nav-links a {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-      letter-spacing: 0.03em;
-      transition: color 0.2s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 0; height: 1.5px;
-      background: var(--blue);
-      transition: width 0.25s ease;
-    }
-
-    .nav-links a:hover { color: var(--blue); }
-    .nav-links a:hover::after { width: 100%; }
-
-    .hero {
-      min-height: calc(100vh - var(--nav-h));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg-circle {
-      position: absolute;
-      border-radius: 50%;
-      background: var(--blue-light);
-      opacity: 0.5;
-      will-change: transform;
-    }
-
-    .hero-bg-circle.c1 { width: 500px; height: 500px; top: -150px; right: -150px; }
-    .hero-bg-circle.c2 { width: 300px; height: 300px; bottom: -80px; left: -80px; }
-
-    .hero-content {
-      max-width: 700px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue);
-      background: var(--blue-light);
-      border: 1px solid #B5D4F4;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
-    }
-
-    .hero h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(48px, 8vw, 80px);
-      line-height: 1.05;
-      letter-spacing: -2px;
-      color: var(--text);
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.15s forwards;
-    }
-
-    .hero h1 span { color: var(--blue); }
-
-    .hero-bio {
-      font-size: 16px; font-weight: 300;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-top: 1.5rem;
-      max-width: 500px;
-      margin-left: auto; margin-right: auto;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.3s forwards;
-    }
-
-    .hero-cta {
-      display: flex; gap: 12px;
-      justify-content: center;
-      margin-top: 2.5rem;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.45s forwards;
-    }
-
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--blue); color: #fff;
-      font-size: 14px; font-weight: 500;
-      padding: 12px 24px; border-radius: 50px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-      border: none; cursor: pointer;
-    }
-
-    .btn-primary:hover { background: #0C447C; transform: translateY(-2px); }
-
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: var(--text);
-      font-size: 14px; font-weight: 500;
-      padding: 12px 24px; border-radius: 50px;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      transition: border-color 0.2s, transform 0.2s, background 0.2s;
-      cursor: pointer;
-    }
-
-    .btn-outline:hover { border-color: var(--blue); background: var(--blue-light); transform: translateY(-2px); }
-
-    .stats-bar {
-      background: var(--white);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 2rem 2.5rem;
-      display: flex;
-      justify-content: center;
-      gap: 4rem;
-      flex-wrap: wrap;
-    }
-
-    .stat { text-align: center; }
-
-    .stat-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: 32px;
-      color: var(--blue);
-      display: block;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .stat-num.visible { opacity: 1; transform: translateY(0); }
-
-    .stat-label {
-      font-size: 12px; color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-top: 4px;
-      opacity: 0;
-      transition: opacity 0.5s ease 0.15s;
-    }
-
-    .stat-label.visible { opacity: 1; }
-
-    section { padding: 5rem 2.5rem; }
-    .container { max-width: 900px; margin: 0 auto; }
-
-    .section-label {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .section-label.visible { opacity: 1; transform: translateX(0); }
-
-    .section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -0.5px;
-      color: var(--text);
-      margin-bottom: 3rem;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.55s ease 0.1s, transform 0.55s ease 0.1s;
-    }
-
-    .section-title.visible { opacity: 1; transform: translateY(0); }
-
-    #experience { background: var(--white); }
-
-    .exp-grid { display: grid; gap: 1.5rem; }
-
-    .exp-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.8rem 2rem;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.55s ease, transform 0.55s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-
-    .exp-card.visible { opacity: 1; transform: translateY(0); }
-
-    .exp-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--blue);
-      transform: scaleY(0);
-      transform-origin: bottom;
-      transition: transform 0.3s ease;
-      border-radius: 0 2px 2px 0;
-    }
-
-    .exp-card:hover { transform: translateY(-4px) !important; box-shadow: 0 12px 40px rgba(24,95,165,0.1); border-color: #B5D4F4; }
-    .exp-card:hover::before { transform: scaleY(1); }
-
-    .exp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .exp-company { font-size: 18px; font-weight: 500; color: var(--text); }
-    .exp-role { font-size: 13px; color: var(--muted); margin-top: 3px; }
-
-    .exp-date {
-      font-size: 12px; font-weight: 500;
-      color: var(--blue);
-      background: var(--blue-light);
-      padding: 4px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-      border: 1px solid #B5D4F4;
-    }
-
-    .exp-list { list-style: none; display: grid; gap: 8px; }
-
-    .exp-list li {
-      font-size: 14px; color: var(--muted);
-      line-height: 1.6;
-      padding-left: 1.2rem;
-      position: relative;
-      opacity: 0;
-      transform: translateX(-10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .exp-list li.visible { opacity: 1; transform: translateX(0); }
-
-    .exp-list li::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 9px;
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--blue-mid);
-    }
-
-    #skills { background: var(--bg); }
-
-    .skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-    @media (max-width: 640px) { .skills-layout { grid-template-columns: 1fr; } }
-
-    .skills-group-title {
-      font-size: 13px; font-weight: 500;
-      color: var(--hint);
-      text-transform: uppercase; letter-spacing: 0.08em;
-      margin-bottom: 1rem;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .skills-group-title.visible { opacity: 1; transform: translateY(0); }
-
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    .skill-tag {
-      font-size: 13px; font-weight: 400;
-      color: var(--muted);
-      background: var(--white);
-      border: 1px solid var(--border);
-      padding: 7px 15px;
-      border-radius: 50px;
-      transition: all 0.2s ease;
-      cursor: default;
-      opacity: 0;
-      transform: scale(0.85) translateY(8px);
-    }
-
-    .skill-tag.visible { opacity: 1; transform: scale(1) translateY(0); }
-    .skill-tag:hover { background: var(--blue-light); border-color: #B5D4F4; color: #0C447C; transform: scale(1.04) translateY(0) !important; }
-
-    .lang-list { display: grid; gap: 12px; }
-
-    .lang-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      opacity: 0;
-      transform: translateX(20px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
-
-    .lang-item.visible { opacity: 1; transform: translateX(0); }
-
-    .lang-top { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; }
-    .lang-level-text { font-size: 12px; color: var(--hint); }
-
-    .lang-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-
-    .lang-bar-fill {
-      height: 100%;
-      background: var(--blue);
-      border-radius: 2px;
-      width: 0;
-      transition: width 1s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    #education { background: var(--white); }
-
-    .edu-timeline { position: relative; padding-left: 28px; }
-    .edu-timeline::before {
-      content: '';
-      position: absolute;
-      left: 7px; top: 8px; bottom: 8px;
-      width: 1px;
-      background: var(--border);
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: transform 0.8s ease 0.2s;
-    }
-
-    .edu-timeline.visible::before { transform: scaleY(1); }
-
-    .edu-item {
-      position: relative;
-      margin-bottom: 2rem;
-      opacity: 0;
-      transform: translateX(-24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .edu-item.visible { opacity: 1; transform: translateX(0); }
-
-    .edu-dot {
-      position: absolute;
-      left: -25px; top: 6px;
-      width: 15px; height: 15px;
-      border-radius: 50%;
-      background: var(--white);
-      border: 2px solid var(--blue);
-      transition: background 0.3s, transform 0.3s;
-      transform: scale(0);
-    }
-
-    .edu-item.visible .edu-dot { transform: scale(1); transition: background 0.3s, transform 0.4s ease 0.2s; }
-    .edu-item:hover .edu-dot { background: var(--blue); }
-
-    .edu-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.6rem;
-      transition: border-color 0.3s, transform 0.3s;
-    }
-
-    .edu-card:hover { border-color: #B5D4F4; transform: translateX(4px); }
-
-    .edu-year { font-size: 11px; font-weight: 500; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .edu-degree { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; }
-    .edu-school { font-size: 13px; color: var(--muted); margin-top: 4px; }
-
-    #contact { background: var(--text); color: var(--white); }
-    #contact .section-label { color: #85B7EB; }
-    #contact .section-title { color: var(--white); margin-bottom: 2rem; }
-
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2.5rem; }
-    @media (max-width: 500px) { .contact-grid { grid-template-columns: 1fr; } }
-
-    .contact-card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.4rem;
-      display: flex; align-items: center; gap: 12px;
-      transition: background 0.2s, transform 0.2s;
-      text-decoration: none;
-      color: var(--white);
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    .contact-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease, background 0.2s; }
-    .contact-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px) !important; }
-
-    .contact-icon {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .contact-icon svg { width: 16px; height: 16px; }
-
-    .contact-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
-    .contact-value { font-size: 14px; font-weight: 500; margin-top: 2px; }
-
-    footer {
-      background: var(--text);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 1.5rem 2.5rem;
-      text-align: center;
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 640px) {
-      nav { padding: 0 1.2rem; }
-      .nav-links { gap: 1rem; }
-      section { padding: 3.5rem 1.2rem; }
-      .stats-bar { gap: 2rem; padding: 1.5rem 1.2rem; }
-    }
-
-    .ripple {
-      position: fixed;
-      border-radius: 50%;
-      background: rgba(24, 95, 165, 0.15);
-      pointer-events: none;
-      z-index: 9999;
-      transform: scale(0);
-      animation: ripple-anim 0.6s ease-out forwards;
-    }
-
-    @keyframes ripple-anim {
-      to { transform: scale(4); opacity: 0; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ALLAOUI Elmehdi — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+:root{
+  --dark:#1e1e1c;
+  --light:#f0ede6;
+  --white:#ffffff;
+  --blue:#1a3bd4;
+  --pink:#c2185b;
+  --green:#3a7d44;
+  --text-dark:#1e1e1c;
+  --text-muted:#666560;
+  --nav-h:64px;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--light);
+  color:var(--text-dark);
+  overflow-x:hidden;
+}
+
+/* PROGRESS */
+#prog{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:var(--blue);z-index:500;
+  transition:width 0.08s linear;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:200;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;
+  background:rgba(30,30,28,0.96);
+  backdrop-filter:blur(10px);
+}
+
+.nav-logo{
+  font-family:'Anton',sans-serif;
+  font-size:22px;letter-spacing:0.04em;
+  color:var(--white);
+}
+
+.nav-right{display:flex;align-items:center;gap:2rem;}
+
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.6);text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--white);}
+
+/* LANG TOGGLE */
+.lang-toggle{
+  display:flex;background:rgba(255,255,255,0.1);
+  border-radius:20px;padding:3px;gap:2px;
+}
+.lang-btn{
+  font-size:11px;font-weight:700;letter-spacing:0.08em;
+  padding:4px 13px;border-radius:14px;border:none;
+  cursor:pointer;background:transparent;color:rgba(255,255,255,0.5);
+  transition:background 0.2s,color 0.2s;
+}
+.lang-btn.active{background:var(--blue);color:#fff;}
+
+/* ══════════════════════════════
+   HERO — dark section
+══════════════════════════════ */
+.hero{
+  background:var(--dark);
+  min-height:calc(100vh - var(--nav-h));
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;
+  overflow:hidden;
+}
+
+@media(max-width:700px){.hero{grid-template-columns:1fr;}}
+
+.hero-left{
+  padding:4rem 2.5rem 3rem;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  position:relative;z-index:2;
+}
+
+.hero-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(255,255,255,0.4);
+  margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp 0.6s ease 0.1s forwards;
+}
+
+.hero-big{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(60px,10vw,130px);
+  line-height:0.92;letter-spacing:-1px;
+  color:var(--white);
+  mix-blend-mode:normal;
+  opacity:0;animation:fadeUp 0.7s ease 0.2s forwards;
+}
+
+.hero-big .outline{
+  -webkit-text-stroke:2px var(--white);
+  color:transparent;
+}
+
+.hero-bio-block{
+  margin-top:2.5rem;
+  max-width:380px;
+  opacity:0;animation:fadeUp 0.6s ease 0.4s forwards;
+}
+
+.hero-name{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;color:var(--white);
+  margin-bottom:8px;
+}
+
+.hero-bio{
+  font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.6);
+  line-height:1.75;
+}
+
+.hero-badge{
+  display:inline-block;margin-top:1.5rem;
+  font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--blue);border:1.5px solid var(--blue);
+  padding:6px 16px;border-radius:20px;
+  transition:background 0.2s,color 0.2s;
+}
+.hero-badge:hover{background:var(--blue);color:#fff;}
+
+.hero-right{
+  display:flex;align-items:flex-end;justify-content:flex-end;
+  padding:2rem;position:relative;
+  opacity:0;animation:fadeIn 0.9s ease 0.5s forwards;
+}
+
+.hero-title-bg{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(70px,12vw,160px);
+  line-height:0.88;
+  color:rgba(255,255,255,0.05);
+  text-transform:uppercase;
+  letter-spacing:-2px;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:1;
+}
+
+.hero-cta{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:2rem;
+  opacity:0;animation:fadeUp 0.6s ease 0.55s forwards;
+}
+
+.btn-pri{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--blue);color:#fff;
+  font-size:13px;font-weight:600;letter-spacing:0.04em;
+  padding:11px 22px;border-radius:50px;text-decoration:none;
+  transition:background 0.2s,transform 0.2s;border:none;cursor:pointer;
+}
+.btn-pri:hover{background:#1230b0;transform:translateY(-2px);}
+
+.btn-out{
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;color:rgba(255,255,255,0.7);
+  font-size:13px;font-weight:600;letter-spacing:0.04em;
+  padding:11px 22px;border-radius:50px;text-decoration:none;
+  border:1.5px solid rgba(255,255,255,0.2);
+  transition:border-color 0.2s,color 0.2s,transform 0.2s;cursor:pointer;
+}
+.btn-out:hover{border-color:rgba(255,255,255,0.6);color:#fff;transform:translateY(-2px);}
+
+/* ══════════════════════════════
+   STATS — light
+══════════════════════════════ */
+.stats{
+  background:var(--white);
+  display:flex;justify-content:center;gap:0;
+  flex-wrap:wrap;
+  border-bottom:1px solid #ddd;
+}
+
+.stat{
+  text-align:center;padding:2rem 3rem;
+  border-right:1px solid #eee;
+  flex:1;min-width:120px;
+}
+.stat:last-child{border-right:none;}
+
+.stat-n{
+  font-family:'Anton',sans-serif;
+  font-size:40px;color:var(--blue);
+  display:block;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.5s ease,transform 0.5s ease;
+}
+.stat-n.visible{opacity:1;transform:translateY(0);}
+
+.stat-l{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text-muted);
+  margin-top:4px;
+  opacity:0;transition:opacity 0.5s ease 0.15s;
+}
+.stat-l.visible{opacity:1;}
+
+/* ══════════════════════════════
+   WORK EXPERIENCE — light, bold title
+══════════════════════════════ */
+.exp-section{background:var(--light);padding:0;}
+
+.exp-title-row{
+  padding:3rem 2.5rem 0;
+  overflow:hidden;
+}
+
+.section-mega{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(48px,9vw,110px);
+  line-height:0.92;
+  letter-spacing:-1px;
+  text-transform:uppercase;
+  opacity:0;
+  transform:translateY(60px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.section-mega.visible{opacity:1;transform:translateY(0);}
+.section-mega.blue{color:var(--blue);}
+.section-mega.pink{color:var(--pink);}
+.section-mega.green{color:var(--green);}
+.section-mega.dark{color:var(--dark);}
+
+.exp-body{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  padding:2.5rem 2.5rem 4rem;
+  max-width:680px;
+}
+@media(max-width:680px){.exp-body{grid-template-columns:1fr;}}
+
+.exp-jobs{display:grid;gap:2rem;align-content:start;}
+
+.exp-item{
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.55s ease,transform 0.55s ease;
+}
+.exp-item.visible{opacity:1;transform:translateY(0);}
+
+.exp-company{
+  font-family:'DM Serif Display',serif;
+  font-size:20px;color:var(--text-dark);margin-bottom:3px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+}
+
+.exp-date-pill{
+  font-family:'Nunito',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:0.08em;
+  color:var(--blue);
+  background:rgba(26,59,212,0.08);
+  padding:3px 10px;border-radius:20px;
+  border:1px solid rgba(26,59,212,0.2);
+}
+
+.exp-role{
+  font-size:12px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--text-muted);
+  margin-bottom:10px;
+}
+
+.exp-ul{list-style:none;display:grid;gap:6px;}
+.exp-ul li{
+  font-size:14px;color:var(--text-muted);line-height:1.65;
+  padding-left:1.1rem;position:relative;
+  opacity:0;transform:translateX(-10px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.exp-ul li.visible{opacity:1;transform:translateX(0);}
+.exp-ul li::before{
+  content:'';position:absolute;left:0;top:9px;
+  width:5px;height:5px;border-radius:50%;background:var(--blue);
+}
+
+.exp-divider{
+  height:1px;background:#ddd;margin:1.5rem 0;
+}
+
+/* right side decorative block */
+.exp-deco{
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+  opacity:0;transform:translateX(30px);
+  transition:opacity 0.6s ease 0.2s,transform 0.6s ease 0.2s;
+}
+.exp-deco.visible{opacity:1;transform:translateX(0);}
+
+.exp-deco-inner{
+  background:var(--dark);
+  border-radius:16px;
+  padding:2.5rem;
+  color:var(--white);
+  width:100%;max-width:320px;
+}
+
+.deco-label{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.4);
+  margin-bottom:1.2rem;
+}
+
+.deco-skills{display:flex;flex-wrap:wrap;gap:8px;}
+.tool-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.tool-card{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;
+  padding:14px 8px 10px;
+  cursor:default;
+  opacity:0;transform:scale(0.88);
+  transition:opacity 0.3s ease,transform 0.3s ease,background 0.2s,border-color 0.2s;
+}
+.tool-card.visible{opacity:1;transform:scale(1);}
+.tool-card:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.28);transform:scale(1.05)!important;}
+.tool-icon-wrap{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.tool-name{
+  font-size:11px;font-weight:700;letter-spacing:0.04em;
+  color:rgba(255,255,255,0.8);text-align:center;
+}
+.deco-skill{
+  font-size:12px;font-weight:600;
+  color:var(--white);
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  padding:6px 14px;border-radius:50px;
+  opacity:0;transform:scale(0.88);
+  transition:opacity 0.3s ease,transform 0.3s ease;
+}
+.deco-skill.visible{opacity:1;transform:scale(1);}
+.deco-skill:hover{background:var(--blue);border-color:var(--blue);}
+
+/* ══════════════════════════════
+   EDUCATION — dark section
+══════════════════════════════ */
+.edu-section{
+  background:var(--dark);
+  padding:0;
+}
+
+.edu-title-row{
+  padding:3rem 2.5rem 0;
+}
+
+.edu-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  padding:2.5rem 2.5rem 4rem;
+  align-items:start;
+}
+@media(max-width:680px){.edu-body{grid-template-columns:1fr;}}
+
+.edu-left{display:grid;gap:2rem;}
+
+.edu-item{
+  padding:1.6rem 2rem;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;
+  opacity:0;transform:translateX(-24px);
+  transition:opacity 0.55s ease,transform 0.55s ease;
+}
+.edu-item.visible{opacity:1;transform:translateX(0);}
+.edu-item:hover{border-color:rgba(255,255,255,0.25);}
+
+.edu-year{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--pink);margin-bottom:6px;
+}
+.edu-degree{
+  font-family:'DM Serif Display',serif;
+  font-size:17px;color:var(--white);line-height:1.35;margin-bottom:6px;
+}
+.edu-school{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5;}
+
+.edu-right{
+  display:flex;align-items:flex-start;justify-content:flex-end;
+  padding:1rem;
+  opacity:0;transform:translateX(24px);
+  transition:opacity 0.6s ease 0.2s,transform 0.6s ease 0.2s;
+}
+.edu-right.visible{opacity:1;transform:translateX(0);}
+
+.edu-globe-block{
+  text-align:right;
+}
+
+.edu-globe-icons{
+  font-size:36px;margin-bottom:1rem;
+  opacity:0.6;
+}
+
+.edu-tagline{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(28px,4vw,48px);
+  color:var(--pink);
+  line-height:1;letter-spacing:-0.5px;
+  text-transform:uppercase;
+}
+
+/* ══════════════════════════════
+   SKILLS — light
+══════════════════════════════ */
+.skills-section{background:var(--white);padding:0;}
+
+.skills-title-row{padding:3rem 2.5rem 0;}
+
+.skills-body{
+  padding:2.5rem 2.5rem 4rem;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:3rem;
+}
+@media(max-width:780px){.skills-body{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.skills-body{grid-template-columns:1fr;}}
+
+.sg-title{
+  font-size:11px;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text-muted);
+  margin-bottom:1rem;
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+.sg-title.visible{opacity:1;transform:translateY(0);}
+
+.skill-pills{display:flex;flex-wrap:wrap;gap:8px;}
+
+.skill-pill{
+  font-size:13px;font-weight:500;
+  color:var(--text-dark);
+  background:var(--light);
+  border:1.5px solid #ddd;
+  padding:7px 16px;border-radius:50px;
+  cursor:default;
+  opacity:0;transform:scale(0.88) translateY(8px);
+  transition:all 0.25s ease;
+}
+.skill-pill.visible{opacity:1;transform:scale(1) translateY(0);}
+.skill-pill:hover{background:var(--blue);border-color:var(--blue);color:#fff;transform:scale(1.04) translateY(0)!important;}
+
+/* LANG */
+.lang-list{display:grid;gap:14px;}
+
+.lang-item{
+  opacity:0;transform:translateX(16px);
+  transition:opacity 0.45s ease,transform 0.45s ease;
+}
+.lang-item.visible{opacity:1;transform:translateX(0);}
+
+.lang-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:7px;}
+.lang-lv{font-size:12px;font-weight:400;color:var(--text-muted);}
+
+.lang-track{height:3px;background:#eee;border-radius:2px;overflow:hidden;}
+.lang-fill{
+  height:100%;background:var(--blue);border-radius:2px;
+  width:0;transition:width 1s cubic-bezier(0.25,1,0.5,1);
+}
+
+/* ══════════════════════════════
+   CONTACT — dark editorial footer
+══════════════════════════════ */
+.contact-section{background:var(--dark);padding:0;}
+
+.contact-title-row{padding:3rem 2.5rem 0;}
+
+.contact-body{
+  padding:2.5rem 2.5rem 4rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2rem;
+  align-items:start;
+}
+@media(max-width:600px){.contact-body{grid-template-columns:1fr;}}
+
+.contact-left p{
+  font-size:14px;font-weight:300;
+  color:rgba(255,255,255,0.5);
+  line-height:1.7;
+  max-width:360px;
+  margin-bottom:2rem;
+}
+
+.contact-cards{display:grid;gap:12px;}
+
+.c-card{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:1rem 1.2rem;
+  text-decoration:none;color:var(--white);
+  transition:background 0.2s,transform 0.2s,border-color 0.2s;
+  opacity:0;transform:translateY(20px);
+}
+.c-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.5s ease,transform 0.5s ease,background 0.2s,border-color 0.2s;}
+.c-card:hover{background:rgba(255,255,255,0.11);border-color:rgba(255,255,255,0.25);transform:translateY(-2px)!important;}
+
+.c-icon{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.c-icon svg{width:16px;height:16px;}
+.c-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);}
+.c-val{font-size:14px;font-weight:600;margin-top:2px;}
+
+/* contact right: big name display */
+.contact-right{
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;
+  padding-top:1rem;
+  opacity:0;transform:translateX(30px);
+  transition:opacity 0.6s ease 0.3s,transform 0.6s ease 0.3s;
+}
+.contact-right.visible{opacity:1;transform:translateX(0);}
+
+.cr-label{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);
+  margin-bottom:0.5rem;
+}
+
+.cr-name{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(32px,6vw,72px);
+  color:var(--white);
+  text-align:right;line-height:1;
+  letter-spacing:-0.5px;
+}
+
+.cr-date{
+  font-size:12px;font-weight:700;letter-spacing:0.12em;
+  color:rgba(255,255,255,0.25);
+  margin-top:1rem;text-align:right;
+}
+
+/* FOOTER */
+footer{
+  background:rgba(0,0,0,0.5);
+  padding:1.2rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;
+  font-size:11px;font-weight:600;letter-spacing:0.06em;
+  color:rgba(255,255,255,0.25);text-transform:uppercase;
+}
+
+/* ══════════════════════════════
+   ANIMATIONS
+══════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* RIPPLE */
+.ripple{
+  position:fixed;border-radius:50%;
+  background:rgba(26,59,212,0.12);
+  pointer-events:none;z-index:9999;
+  transform:scale(0);
+  animation:rip 0.6s ease-out forwards;
+}
+@keyframes rip{to{transform:scale(4);opacity:0;}}
+
+@media(max-width:640px){
+  nav{padding:0 1.2rem;}
+  .nav-links{gap:1rem;}
+  .exp-title-row,.exp-body,.edu-title-row,.edu-body,
+  .skills-title-row,.skills-body,.contact-title-row,.contact-body{padding-left:1.2rem;padding-right:1.2rem;}
+  .hero-left{padding:2.5rem 1.2rem 2rem;}
+}
+</style>
 </head>
 <body>
 
-  <div id="scroll-progress"></div>
+<div id="prog"></div>
 
-  <nav id="navbar">
-    <div class="nav-logo">AE</div>
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">AE</div>
+  <div class="nav-right">
     <ul class="nav-links">
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#education">Education</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#experience" data-i18n="nav.exp">Experience</a></li>
+      <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
+      <li><a href="#education" data-i18n="nav.edu">Education</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
     </ul>
-  </nav>
-
-  <section class="hero" id="home">
-    <div class="hero-bg-circle c1"></div>
-    <div class="hero-bg-circle c2"></div>
-    <div class="hero-content">
-      <div class="hero-badge">Open to work</div>
-      <h1>ALLAOUI<br><span>Elmehdi</span></h1>
-      <p class="hero-bio">Master's student in Digital Economics & Management — rigorous, data-oriented, with a passion for content, social media, and performance analysis.</p>
-      <div class="hero-cta">
-        <a href="#experience" class="btn-primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-          View my experience
-        </a>
-        <a href="#contact" class="btn-outline">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Get in touch
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <div class="stats-bar" id="stats-bar">
-    <div class="stat">
-      <span class="stat-num">2+</span>
-      <div class="stat-label">Years of experience</div>
-    </div>
-    <div class="stat">
-      <span class="stat-num">4</span>
-      <div class="stat-label">Languages spoken</div>
-    </div>
-    <div class="stat">
-      <span class="stat-num">7+</span>
-      <div class="stat-label">Skills mastered</div>
-    </div>
-    <div class="stat">
-      <span class="stat-num">2</span>
-      <div class="stat-label">Degrees earned</div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
     </div>
   </div>
+</nav>
 
-  <section id="experience">
-    <div class="container">
-      <div class="section-label">Career path</div>
-      <div class="section-title">Experience</div>
-      <div class="exp-grid">
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow" data-i18n="hero.eyebrow">Digital Economics · Morocco · 2025</div>
+    <div class="hero-big">
+      ALLAOUI<br>
+      <span class="outline">ELMEHDI</span>
+    </div>
+    <div class="hero-bio-block">
+      <div class="hero-name">Allaoui Elmehdi</div>
+      <p class="hero-bio" data-i18n="hero.bio">Master's student in Digital Economics & Management — rigorous, data-oriented, with a passion for content, social media, and performance analysis.</p>
+      <span class="hero-badge" data-i18n="hero.badge">Open to work</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#experience" class="btn-pri">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        <span data-i18n="hero.cta1">View experience</span>
+      </a>
+      <a href="#contact" class="btn-out">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span data-i18n="hero.cta2">Get in touch</span>
+      </a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-title-bg">PORTFOLIO</div>
+  </div>
+</div>
 
-        <div class="exp-card">
-          <div class="exp-top">
-            <div>
-              <div class="exp-company">LESSAFRE</div>
-              <div class="exp-role">Digital Marketer</div>
-            </div>
-            <div class="exp-date">2026</div>
-          </div>
-          <ul class="exp-list">
-            <li>Managed social media content (posts & Reels) to increase engagement.</li>
-            <li>Maintained and organized the application database.</li>
-            <li>Resolved client inquiries and complaints efficiently.</li>
-            <li>Developed a landing page to present the company's concept.</li>
-          </ul>
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><span class="stat-n">3+</span><div class="stat-l" data-i18n="stats.exp">Years of experience</div></div>
+  <div class="stat"><span class="stat-n">4</span><div class="stat-l" data-i18n="stats.lang">Languages spoken</div></div>
+  <div class="stat"><span class="stat-n">10+</span><div class="stat-l" data-i18n="stats.skills">Skills mastered</div></div>
+  <div class="stat"><span class="stat-n">2</span><div class="stat-l" data-i18n="stats.degrees">Degrees earned</div></div>
+</div>
+
+<!-- WORK EXPERIENCE -->
+<div class="exp-section" id="experience">
+  <div class="exp-title-row">
+    <div class="section-mega blue" data-i18n="exp.title">WORK EXPERIENCE</div>
+  </div>
+  <div class="exp-body">
+    <div class="exp-jobs">
+
+      <div class="exp-item">
+        <div class="exp-company">
+          LESSAFRE
+          <span class="exp-date-pill">2026</span>
         </div>
+        <div class="exp-role" data-i18n="exp.j1.role">Digital Marketer</div>
+        <ul class="exp-ul">
+          <li data-i18n="exp.j1.b1">Managed social media content (posts & Reels) to increase engagement.</li>
+          <li data-i18n="exp.j1.b2">Maintained and organized the application database.</li>
+          <li data-i18n="exp.j1.b3">Resolved client inquiries and complaints efficiently.</li>
+          <li data-i18n="exp.j1.b4">Developed a landing page to present the company's concept.</li>
+        </ul>
+      </div>
 
-        <div class="exp-card">
-          <div class="exp-top">
-            <div>
-              <div class="exp-company">J'ai testé</div>
-              <div class="exp-role">Data Entry Agent</div>
-            </div>
-            <div class="exp-date">2025</div>
-          </div>
-          <ul class="exp-list">
-            <li>Collected and entered data to populate the platform application.</li>
-            <li>Verified consistency and compliance of information per platform requirements.</li>
-            <li>Updated and standardized establishment records across the database.</li>
-            <li>Improved content reliability and user experience through clean, structured data.</li>
-          </ul>
+      <div class="exp-divider"></div>
+
+      <div class="exp-item">
+        <div class="exp-company">
+          J'ai testé
+          <span class="exp-date-pill">2025</span>
         </div>
+        <div class="exp-role" data-i18n="exp.j2.role">Data Entry Agent</div>
+        <ul class="exp-ul">
+          <li data-i18n="exp.j2.b1">Collected and entered data to populate the platform application.</li>
+          <li data-i18n="exp.j2.b2">Verified consistency and compliance of information per requirements.</li>
+          <li data-i18n="exp.j2.b3">Updated and standardized establishment records across the database.</li>
+          <li data-i18n="exp.j2.b4">Improved content reliability through clean, structured data.</li>
+        </ul>
+      </div>
 
-        <div class="exp-card" style="transition-delay: 0.15s">
-          <div class="exp-top">
-            <div>
-              <div class="exp-company">BMZ</div>
-              <div class="exp-role">Site Team Leader</div>
-            </div>
-            <div class="exp-date">2023 – 2024</div>
-          </div>
-          <ul class="exp-list">
-            <li>Led and coordinated on-site team to ensure schedule adherence.</li>
-            <li>Performed daily tracking of work progress and material consumption.</li>
-            <li>Collaborated with site managers to streamline operations and minimize delays.</li>
-          </ul>
+      <div class="exp-divider"></div>
+
+      <div class="exp-item">
+        <div class="exp-company">
+          BMZ
+          <span class="exp-date-pill">2023 – 2024</span>
         </div>
+        <div class="exp-role" data-i18n="exp.j3.role">Site Team Leader</div>
+        <ul class="exp-ul">
+          <li data-i18n="exp.j3.b1">Led and coordinated on-site team to ensure schedule adherence.</li>
+          <li data-i18n="exp.j3.b2">Performed daily tracking of work progress and material consumption.</li>
+          <li data-i18n="exp.j3.b3">Collaborated with managers to streamline operations and minimize delays.</li>
+        </ul>
+      </div>
 
+    </div>
+
+    <div class="exp-deco" style="display:none;">
+      <div class="exp-deco-inner">
+        <div class="deco-label" data-i18n="deco.programs">Programs & tools</div>
+        <div class="tool-grid">
+
+          <!-- Power BI -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#f2c811;">
+              <svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="28" width="8" height="16" rx="2" fill="#b8a009"/>
+                <rect x="14" y="20" width="8" height="24" rx="2" fill="#8a7800"/>
+                <rect x="24" y="10" width="8" height="34" rx="2" fill="#5c5000"/>
+                <rect x="34" y="4" width="8" height="40" rx="2" fill="#3a3200"/>
+                <rect x="4" y="28" width="8" height="16" rx="2" fill="#403200" opacity="0.3"/>
+                <!-- Power BI yellow bar highlight -->
+                <rect x="5" y="29" width="6" height="3" rx="1" fill="rgba(255,255,255,0.4)"/>
+                <rect x="15" y="21" width="6" height="3" rx="1" fill="rgba(255,255,255,0.4)"/>
+                <rect x="25" y="11" width="6" height="3" rx="1" fill="rgba(255,255,255,0.4)"/>
+                <rect x="35" y="5" width="6" height="3" rx="1" fill="rgba(255,255,255,0.4)"/>
+              </svg>
+            </div>
+            <span class="tool-name">Power BI</span>
+          </div>
+
+          <!-- Figma — exact logo shape -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#2c2c2c;">
+              <svg viewBox="0 0 38 57" width="24" height="36" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.5 9.5 0 0 1 19 28.5z" fill="#1abcfe"/>
+                <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5A9.5 9.5 0 0 1 0 47.5z" fill="#0acf83"/>
+                <path d="M19 0v19h9.5A9.5 9.5 0 0 0 19 0z" fill="#ff7262"/>
+                <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#f24e1e"/>
+                <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#a259ff"/>
+              </svg>
+            </div>
+            <span class="tool-name">Figma</span>
+          </div>
+
+          <!-- Excel — Microsoft green grid -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#185c37;">
+              <svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="44" height="44" rx="5" fill="#185c37"/>
+                <rect x="2" y="2" width="23" height="44" rx="5" fill="#21a366"/>
+                <!-- grid lines -->
+                <line x1="25" y1="16" x2="46" y2="16" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <line x1="25" y1="24" x2="46" y2="24" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <line x1="25" y1="32" x2="46" y2="32" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <line x1="35" y1="10" x2="35" y2="46" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <!-- X letter -->
+                <line x1="9" y1="15" x2="20" y2="33" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+                <line x1="20" y1="15" x2="9" y2="33" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="tool-name">Excel</span>
+          </div>
+
+          <!-- Canva — C shape logo -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#7d2ae8;">
+              <svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="22" fill="#7d2ae8"/>
+                <!-- Canva-style gradient circle background -->
+                <circle cx="24" cy="24" r="22" fill="url(#cg)"/>
+                <defs>
+                  <radialGradient id="cg" cx="30%" cy="30%">
+                    <stop offset="0%" stop-color="#a259ff"/>
+                    <stop offset="100%" stop-color="#7d2ae8"/>
+                  </radialGradient>
+                </defs>
+                <!-- Bold C letterform -->
+                <path d="M32 16a12 12 0 1 0 0 16" stroke="white" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+            <span class="tool-name">Canva</span>
+          </div>
+
+          <!-- Filmora — play button style -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#00bcd4;">
+              <svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00e5ff"/>
+                    <stop offset="100%" stop-color="#0097a7"/>
+                  </linearGradient>
+                </defs>
+                <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#fg)"/>
+                <!-- Film strip left -->
+                <rect x="6" y="10" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <rect x="6" y="21" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <rect x="6" y="32" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <!-- Film strip right -->
+                <rect x="37" y="10" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <rect x="37" y="21" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <rect x="37" y="32" width="5" height="6" rx="1" fill="rgba(255,255,255,0.35)"/>
+                <!-- Play triangle -->
+                <polygon points="19,15 35,24 19,33" fill="white"/>
+              </svg>
+            </div>
+            <span class="tool-name">Filmora</span>
+          </div>
+
+          <!-- VS Code — exact logo -->
+          <div class="tool-card deco-skill">
+            <div class="tool-icon-wrap" style="background:#007acc;">
+              <svg viewBox="0 0 48 48" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="vsg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#29b6f6"/>
+                    <stop offset="100%" stop-color="#0277bd"/>
+                  </linearGradient>
+                </defs>
+                <rect width="48" height="48" rx="8" fill="url(#vsg)"/>
+                <!-- VS Code logo paths approximation -->
+                <!-- left chevron -->
+                <polyline points="10,30 20,24 10,18" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- bottom line -->
+                <line x1="22" y1="33" x2="38" y2="33" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="tool-name">VS Code</span>
+          </div>
+
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <section id="skills">
-    <div class="container">
-      <div class="section-label">What I bring</div>
-      <div class="section-title">Skills & languages</div>
-      <div class="skills-layout">
+<!-- EDUCATION -->
+<div class="edu-section" id="education">
+  <div class="edu-title-row">
+    <div class="section-mega pink" data-i18n="edu.title">EDUCATION</div>
+  </div>
+  <div class="edu-body">
+    <div class="edu-left">
 
-        <div>
-          <div class="skills-group-title">Technical & soft skills</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Video editing</span>
-            <span class="skill-tag">Photo editing</span>
-            <span class="skill-tag">Data entry</span>
-            <span class="skill-tag">Reporting</span>
-            <span class="skill-tag">Team management</span>
-            <span class="skill-tag">Social media</span>
-            <span class="skill-tag">Content creation</span>
-            <span class="skill-tag">Copywriting</span>
-            <span class="skill-tag">Performance tracking</span>
-            <span class="skill-tag">Planning & scheduling</span>
-          </div>
-        </div>
+      <div class="edu-item">
+        <div class="edu-year">2024 – <span data-i18n="edu.present">Present</span></div>
+        <div class="edu-degree" data-i18n="edu.d1">Master in Digital Economics & Management</div>
+        <div class="edu-school" data-i18n="edu.s1">Faculté des Sciences Juridiques, Économiques et Sociales — Marrakech</div>
+      </div>
 
-        <div>
-          <div class="skills-group-title">Programs</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Power BI</span>
-            <span class="skill-tag">Figma</span>
-            <span class="skill-tag">Excel</span>
-            <span class="skill-tag">Canva</span>
-            <span class="skill-tag">Filmora</span>
-            <span class="skill-tag">VS Code</span>
-          </div>
-        </div>
+      <div class="edu-item" style="transition-delay:0.15s">
+        <div class="edu-year">2021 – 2023</div>
+        <div class="edu-degree" data-i18n="edu.d2">Bachelor in Economic Sciences & Management</div>
+        <div class="edu-school" data-i18n="edu.s2">Faculté des Sciences Juridiques, Économiques et Sociales — Fès</div>
+      </div>
 
-        <div style="grid-column: 1 / -1;">
-          <div class="skills-group-title">Languages</div>
-          <div class="lang-list" style="max-width: 420px;">
-            <div class="lang-item">
-              <div class="lang-top"><span>Arabic</span><span class="lang-level-text">Native</span></div>
-              <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="100"></div></div>
-            </div>
-            <div class="lang-item" style="transition-delay:0.1s">
-              <div class="lang-top"><span>English</span><span class="lang-level-text">Fluent</span></div>
-              <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="90"></div></div>
-            </div>
-            <div class="lang-item" style="transition-delay:0.2s">
-              <div class="lang-top"><span>French</span><span class="lang-level-text">Very good</span></div>
-              <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="80"></div></div>
-            </div>
-            <div class="lang-item" style="transition-delay:0.3s">
-              <div class="lang-top"><span>Japanese</span><span class="lang-level-text">Intermediate</span></div>
-              <div class="lang-bar-bg"><div class="lang-bar-fill" data-w="45"></div></div>
-            </div>
-          </div>
-        </div>
-
+    </div>
+    <div class="edu-right">
+      <div class="edu-globe-block">
+        <div class="edu-globe-icons">🌐🌐</div>
+        <div class="edu-tagline" data-i18n="edu.tagline">Academic<br>Excellence</div>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <section id="education">
-    <div class="container">
-      <div class="section-label">Academic background</div>
-      <div class="section-title">Education</div>
-      <div class="edu-timeline">
+<!-- SKILLS -->
+<div class="skills-section" id="skills">
+  <div class="skills-title-row">
+    <div class="section-mega dark" data-i18n="skills.title">SKILLS</div>
+  </div>
+  <div class="skills-body">
 
-        <div class="edu-item">
-          <div class="edu-dot"></div>
-          <div class="edu-card">
-            <div class="edu-year">2024 – Present</div>
-            <div class="edu-degree">Master in Digital Economics & Management</div>
-            <div class="edu-school">Faculté des Sciences Juridiques, Économiques et Sociales — Marrakech</div>
-          </div>
-        </div>
-
-        <div class="edu-item" style="transition-delay: 0.2s">
-          <div class="edu-dot"></div>
-          <div class="edu-card">
-            <div class="edu-year">2021 – 2023</div>
-            <div class="edu-degree">Bachelor in Economic Sciences & Management</div>
-            <div class="edu-school">Faculté des Sciences Juridiques, Économiques et Sociales — Fès</div>
-          </div>
-        </div>
-
+    <div>
+      <div class="sg-title" data-i18n="skills.g1">Technical & soft skills</div>
+      <div class="skill-pills">
+        <span class="skill-pill" data-i18n="sk.video">Video editing</span>
+        <span class="skill-pill" data-i18n="sk.photo">Photo editing</span>
+        <span class="skill-pill" data-i18n="sk.data">Data entry</span>
+        <span class="skill-pill" data-i18n="sk.report">Reporting</span>
+        <span class="skill-pill" data-i18n="sk.team">Team management</span>
+        <span class="skill-pill" data-i18n="sk.social">Social media</span>
+        <span class="skill-pill" data-i18n="sk.content">Content creation</span>
+        <span class="skill-pill" data-i18n="sk.copy">Copywriting</span>
+        <span class="skill-pill" data-i18n="sk.perf">Performance tracking</span>
+        <span class="skill-pill" data-i18n="sk.plan">Planning & scheduling</span>
       </div>
     </div>
-  </section>
 
-  <section id="contact">
-    <div class="container">
-      <div class="section-label">Let's connect</div>
-      <div class="section-title">Get in touch</div>
-      <div class="contact-grid">
-        <a href="tel:0711421194" class="contact-card">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92V19a2 2 0 01-2.18 2A19.79 19.79 0 013 4.18 2 2 0 015 2h2.09a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-          </div>
-          <div>
-            <div class="contact-label">Phone</div>
-            <div class="contact-value">0711421194</div>
-          </div>
+    <div>
+      <div class="sg-title" data-i18n="deco.programs">Programs & tools</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Power BI</span>
+        <span class="skill-pill">Figma</span>
+        <span class="skill-pill">Excel</span>
+        <span class="skill-pill">Canva</span>
+        <span class="skill-pill">Filmora</span>
+        <span class="skill-pill">VS Code</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sg-title" data-i18n="skills.g2">Languages</div>
+      <div class="lang-list">
+        <div class="lang-item">
+          <div class="lang-top"><span data-i18n="lang.ar">Arabic</span><span class="lang-lv" data-i18n="lang.native">Native</span></div>
+          <div class="lang-track"><div class="lang-fill" data-w="100"></div></div>
+        </div>
+        <div class="lang-item" style="transition-delay:0.1s">
+          <div class="lang-top"><span data-i18n="lang.en">English</span><span class="lang-lv" data-i18n="lang.fluent">Fluent</span></div>
+          <div class="lang-track"><div class="lang-fill" data-w="90"></div></div>
+        </div>
+        <div class="lang-item" style="transition-delay:0.2s">
+          <div class="lang-top"><span data-i18n="lang.fr">French</span><span class="lang-lv" data-i18n="lang.vg">Very good</span></div>
+          <div class="lang-track"><div class="lang-fill" data-w="80"></div></div>
+        </div>
+        <div class="lang-item" style="transition-delay:0.3s">
+          <div class="lang-top"><span data-i18n="lang.jp">Japanese</span><span class="lang-lv" data-i18n="lang.int">Intermediate</span></div>
+          <div class="lang-track"><div class="lang-fill" data-w="45"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div class="contact-title-row">
+    <div class="section-mega green" data-i18n="contact.title">GET IN TOUCH</div>
+  </div>
+  <div class="contact-body">
+    <div class="contact-left">
+      <p data-i18n="contact.sub">Based in Morocco, available for internship and work opportunities. Feel free to reach out by phone or email.</p>
+      <div class="contact-cards">
+        <a href="tel:0711421194" class="c-card">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92V19a2 2 0 01-2.18 2A19.79 19.79 0 013 4.18 2 2 0 015 2h2.09a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div><div class="c-lbl" data-i18n="contact.phone">Phone</div><div class="c-val">0711421194</div></div>
         </a>
-        <a href="mailto:mehdialaoui123456@gmail.com" class="contact-card" style="transition-delay:0.12s">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <div>
-            <div class="contact-label">Email</div>
-            <div class="contact-value">mehdialaoui123456@gmail.com</div>
-          </div>
+        <a href="mailto:mehdialaoui123456@gmail.com" class="c-card" style="transition-delay:0.1s">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="c-lbl" data-i18n="contact.email">Email</div><div class="c-val" style="font-size:12px;">mehdialaoui123456@gmail.com</div></div>
         </a>
       </div>
-      <p style="font-size:14px; color: rgba(255,255,255,0.4); text-align:center;">Based in Morocco · Available for work opportunities</p>
     </div>
-  </section>
+    <div class="contact-right">
+      <div class="cr-label" data-i18n="contact.portfolio">Creative Portfolio</div>
+      <div class="cr-name">ALLAOUI<br>ELMEHDI</div>
+      <div class="cr-date">MOROCCO / 2025</div>
+    </div>
+  </div>
+</div>
 
-  <footer>&copy; 2025 Allaoui Elmehdi · All rights reserved</footer>
+<footer>
+  <span data-i18n="footer.copy">&copy; 2025 Allaoui Elmehdi</span>
+  <span data-i18n="footer.rights">All rights reserved</span>
+</footer>
 
-  <script>
-    const progressBar = document.getElementById('scroll-progress');
-    const c1 = document.querySelector('.hero-bg-circle.c1');
-    const c2 = document.querySelector('.hero-bg-circle.c2');
-    const navbar = document.getElementById('navbar');
+<script>
+/* ── TRANSLATIONS ── */
+const T = {
+  en:{
+    "nav.exp":"Experience","nav.skills":"Skills","nav.edu":"Education","nav.contact":"Contact",
+    "hero.eyebrow":"Digital Economics · Morocco · 2025",
+    "hero.bio":"Master's student in Digital Economics & Management — rigorous, data-oriented, with a passion for content, social media, and performance analysis.",
+    "hero.badge":"Open to work","hero.cta1":"View experience","hero.cta2":"Get in touch",
+    "stats.exp":"Years of experience","stats.lang":"Languages spoken","stats.skills":"Skills mastered","stats.degrees":"Degrees earned",
+    "exp.title":"WORK EXPERIENCE",
+    "exp.j1.role":"Digital Marketer",
+    "exp.j1.b1":"Managed social media content (posts & Reels) to increase engagement.",
+    "exp.j1.b2":"Maintained and organized the application database.",
+    "exp.j1.b3":"Resolved client inquiries and complaints efficiently.",
+    "exp.j1.b4":"Developed a landing page to present the company's concept.",
+    "exp.j2.role":"Data Entry Agent",
+    "exp.j2.b1":"Collected and entered data to populate the platform application.",
+    "exp.j2.b2":"Verified consistency and compliance of information per requirements.",
+    "exp.j2.b3":"Updated and standardized establishment records across the database.",
+    "exp.j2.b4":"Improved content reliability through clean, structured data.",
+    "exp.j3.role":"Site Team Leader",
+    "exp.j3.b1":"Led and coordinated on-site team to ensure schedule adherence.",
+    "exp.j3.b2":"Performed daily tracking of work progress and material consumption.",
+    "exp.j3.b3":"Collaborated with managers to streamline operations and minimize delays.",
+    "deco.programs":"Programs & tools",
+    "edu.title":"EDUCATION","edu.present":"Present",
+    "edu.d1":"Master in Digital Economics & Management",
+    "edu.s1":"Faculté des Sciences Juridiques, Économiques et Sociales — Marrakech",
+    "edu.d2":"Bachelor in Economic Sciences & Management",
+    "edu.s2":"Faculté des Sciences Juridiques, Économiques et Sociales — Fès",
+    "edu.tagline":"Academic\nExcellence",
+    "skills.title":"SKILLS","skills.g1":"Technical & soft skills","skills.g2":"Languages",
+    "sk.video":"Video editing","sk.photo":"Photo editing","sk.data":"Data entry",
+    "sk.report":"Reporting","sk.team":"Team management","sk.social":"Social media",
+    "sk.content":"Content creation","sk.copy":"Copywriting","sk.perf":"Performance tracking","sk.plan":"Planning & scheduling",
+    "lang.ar":"Arabic","lang.en":"English","lang.fr":"French","lang.jp":"Japanese",
+    "lang.native":"Native","lang.fluent":"Fluent","lang.vg":"Very good","lang.int":"Intermediate",
+    "contact.title":"GET IN TOUCH",
+    "contact.sub":"Based in Morocco, available for internship and work opportunities. Feel free to reach out by phone or email.",
+    "contact.phone":"Phone","contact.email":"Email","contact.portfolio":"Creative Portfolio",
+    "footer.copy":"© 2025 Allaoui Elmehdi","footer.rights":"All rights reserved"
+  },
+  fr:{
+    "nav.exp":"Expérience","nav.skills":"Compétences","nav.edu":"Formation","nav.contact":"Contact",
+    "hero.eyebrow":"Économie Numérique · Maroc · 2025",
+    "hero.bio":"Étudiant en Master d'Économie et Management Digitaux — rigoureux, orienté données, passionné par le contenu, les réseaux sociaux et l'analyse de performance.",
+    "hero.badge":"Ouvert aux opportunités","hero.cta1":"Voir l'expérience","hero.cta2":"Me contacter",
+    "stats.exp":"Années d'expérience","stats.lang":"Langues parlées","stats.skills":"Compétences maîtrisées","stats.degrees":"Diplômes obtenus",
+    "exp.title":"EXPÉRIENCE",
+    "exp.j1.role":"Digital Marketer",
+    "exp.j1.b1":"Gestion du contenu sur les réseaux sociaux (posts & Reels) pour augmenter l'engagement.",
+    "exp.j1.b2":"Maintenance et organisation de la base de données de l'application.",
+    "exp.j1.b3":"Résolution efficace des demandes et réclamations clients.",
+    "exp.j1.b4":"Développement d'une landing page pour présenter le concept de l'entreprise.",
+    "exp.j2.role":"Agent de saisie de données",
+    "exp.j2.b1":"Collecte et saisie des données pour alimenter l'application de la plateforme.",
+    "exp.j2.b2":"Vérification de la cohérence et conformité des informations selon les exigences.",
+    "exp.j2.b3":"Mise à jour et normalisation des fiches établissements dans la base de données.",
+    "exp.j2.b4":"Amélioration de la fiabilité du contenu via des données propres et structurées.",
+    "exp.j3.role":"Chef d'équipe chantier",
+    "exp.j3.b1":"Direction et coordination de l'équipe sur site pour respecter le planning.",
+    "exp.j3.b2":"Suivi quotidien de l'avancement des travaux et de la consommation des matériaux.",
+    "exp.j3.b3":"Collaboration avec les responsables pour optimiser les opérations et réduire les délais.",
+    "deco.programs":"Programmes & outils",
+    "edu.title":"FORMATION","edu.present":"Présent",
+    "edu.d1":"Master en Économie et Management Digitaux",
+    "edu.s1":"Faculté des Sciences Juridiques, Économiques et Sociales — Marrakech",
+    "edu.d2":"Licence en Sciences Économiques et Gestion",
+    "edu.s2":"Faculté des Sciences Juridiques, Économiques et Sociales — Fès",
+    "edu.tagline":"Excellence\nAcadémique",
+    "skills.title":"COMPÉTENCES","skills.g1":"Compétences techniques & humaines","skills.g2":"Langues",
+    "sk.video":"Montage vidéo","sk.photo":"Retouche photo","sk.data":"Saisie de données",
+    "sk.report":"Reporting","sk.team":"Management d'équipe","sk.social":"Réseaux sociaux",
+    "sk.content":"Création de contenu","sk.copy":"Copywriting","sk.perf":"Suivi de performance","sk.plan":"Planification",
+    "lang.ar":"Arabe","lang.en":"Anglais","lang.fr":"Français","lang.jp":"Japonais",
+    "lang.native":"Langue maternelle","lang.fluent":"Courant","lang.vg":"Très bon niveau","lang.int":"Intermédiaire",
+    "contact.title":"ME CONTACTER",
+    "contact.sub":"Basé au Maroc, disponible pour des stages et opportunités de travail. N'hésitez pas à me contacter par téléphone ou email.",
+    "contact.phone":"Téléphone","contact.email":"Email","contact.portfolio":"Portfolio Créatif",
+    "footer.copy":"© 2025 Allaoui Elmehdi","footer.rights":"Tous droits réservés"
+  }
+};
 
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      progressBar.style.width = (scrolled / total * 100) + '%';
-      if (c1) c1.style.transform = `translateY(${scrolled * 0.25}px)`;
-      if (c2) c2.style.transform = `translateY(${scrolled * -0.15}px)`;
-      navbar.classList.toggle('scrolled', scrolled > 20);
-    }, { passive: true });
+function setLang(lang){
+  const t = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if(t[k] !== undefined){
+      if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[k];
+      else el.innerHTML = t[k].replace(/\n/g,'<br>');
+    }
+  });
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.getElementById('btn-fr').classList.toggle('active', lang==='fr');
+  document.documentElement.lang = lang;
+}
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add('visible');
+/* ── SCROLL ── */
+const prog = document.getElementById('prog');
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', ()=>{
+  const s = window.scrollY;
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (s/total*100)+'%';
+  navbar.classList.toggle('scrolled', s > 10);
+},{passive:true});
 
-        if (el.classList.contains('lang-item')) {
-          const fill = el.querySelector('.lang-bar-fill');
-          if (fill) setTimeout(() => { fill.style.width = fill.dataset.w + '%'; }, 300);
-        }
+/* ── INTERSECTION OBSERVER ── */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const el = entry.target;
+    el.classList.add('visible');
 
-        if (el.classList.contains('exp-card')) {
-          el.querySelectorAll('.exp-list li').forEach((li, i) => {
-            setTimeout(() => li.classList.add('visible'), 300 + i * 80);
-          });
-        }
-
-        if (el.classList.contains('edu-timeline')) el.classList.add('visible');
-
-        io.unobserve(el);
+    if(el.classList.contains('lang-item')){
+      const fill = el.querySelector('.lang-fill');
+      if(fill) setTimeout(()=>{ fill.style.width = fill.dataset.w+'%'; }, 300);
+    }
+    if(el.classList.contains('exp-item')){
+      el.querySelectorAll('.exp-ul li').forEach((li,i)=>{
+        setTimeout(()=>li.classList.add('visible'), 250+i*80);
       });
-    }, { threshold: 0.12 });
+    }
+    io.unobserve(el);
+  });
+},{threshold:0.1});
 
-    document.querySelectorAll('.section-label, .section-title').forEach(el => io.observe(el));
-    document.querySelectorAll('.stat-num, .stat-label').forEach(el => io.observe(el));
-    document.querySelectorAll('.exp-card').forEach(el => io.observe(el));
-    document.querySelectorAll('.skills-group-title').forEach(el => io.observe(el));
-    document.querySelectorAll('.skill-tag').forEach((el, i) => {
-      el.style.transitionDelay = (i * 0.045) + 's';
-      io.observe(el);
-    });
-    document.querySelectorAll('.lang-item').forEach(el => io.observe(el));
-    const eduTimeline = document.querySelector('.edu-timeline');
-    if (eduTimeline) io.observe(eduTimeline);
-    document.querySelectorAll('.edu-item').forEach(el => io.observe(el));
-    document.querySelectorAll('.contact-card').forEach(el => io.observe(el));
+document.querySelectorAll('.stat-n,.stat-l').forEach(el=>io.observe(el));
+document.querySelectorAll('.section-mega').forEach(el=>io.observe(el));
+document.querySelectorAll('.exp-item').forEach(el=>io.observe(el));
+document.querySelectorAll('.exp-deco').forEach(el=>io.observe(el));
+document.querySelectorAll('.edu-item,.edu-right').forEach(el=>io.observe(el));
+document.querySelectorAll('.sg-title').forEach(el=>io.observe(el));
+document.querySelectorAll('.skill-pill').forEach((el,i)=>{
+  el.style.transitionDelay=(i*0.04)+'s';
+  io.observe(el);
+});
+document.querySelectorAll('.deco-skill').forEach((el,i)=>{
+  el.style.transitionDelay=(i*0.06)+'s';
+  io.observe(el);
+});
+document.querySelectorAll('.lang-item').forEach(el=>io.observe(el));
+document.querySelectorAll('.c-card,.contact-right').forEach(el=>io.observe(el));
 
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-      });
-    });
+/* ── SMOOTH ANCHORS ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
 
-    document.addEventListener('click', e => {
-      const r = document.createElement('div');
-      r.className = 'ripple';
-      const size = 40;
-      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - size/2}px;top:${e.clientY - size/2}px;`;
-      document.body.appendChild(r);
-      r.addEventListener('animationend', () => r.remove());
-    });
-  </script>
+/* ── RIPPLE ── */
+document.addEventListener('click',e=>{
+  const r = document.createElement('div');
+  r.className='ripple';
+  const sz=40;
+  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-sz/2}px;top:${e.clientY-sz/2}px;`;
+  document.body.appendChild(r);
+  r.addEventListener('animationend',()=>r.remove());
+});
+</script>
 </body>
 </html>
